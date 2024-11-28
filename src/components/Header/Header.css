@@ -1,0 +1,16 @@
+header {
+    margin-top: 100px ;
+    margin-left: 300px;
+    p {
+        display: flex;
+        font-size: 20px;
+        font-weight: lighter;
+    }
+    h1 {
+        font-size: 42px;
+        font-weight:500;
+        display: flex;
+        color: white;
+        margin-bottom: 10px;
+    }
+}
