@@ -6,7 +6,7 @@ import { StoreContext } from "../../context/StoreContext";
 
 const Navbar = ({ setShowLogin }) => {
 
-    const { setToken, token, user, setUser } = useContext(StoreContext);
+    const { setToken, token, user, setUser, fetchUser } = useContext(StoreContext);
     const [menu, setMenu] = useState("home");
     const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
@@ -35,6 +35,9 @@ const Navbar = ({ setShowLogin }) => {
         };
 
         handleScroll();
+        // console.log("userId", localStorage.getItem('userId'))
+        // localStorage.removeItem('userId')
+        // localStorage.removeItem('customerToken')
 
         window.addEventListener('scroll', handleScroll);
 
@@ -43,7 +46,12 @@ const Navbar = ({ setShowLogin }) => {
         };
     }, [location.pathname]);
 
+    // fetchUser()
+
     let tontai = false;
+    // if(token) {
+    //     tontai = true;
+    // }
     if (localStorage.getItem('userId')) {
         tontai = true;
     }

@@ -5,7 +5,7 @@
   "type": "module",
   "proxy": "http://localhost:8080/",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite && node clearLocalStorage.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
