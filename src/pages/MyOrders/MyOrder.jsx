@@ -16,7 +16,7 @@ const MyOrder = () => {
                 <Link to=''><div className="my_orders">My orders</div></Link>
                 <Link to='profile'><div className="profile">Profile</div></Link>
                 <Link to='change-password'><div className="change_password">Change password</div></Link>
-                <Link to='contact-list'><div className="contact_list">Contact list</div></Link>
+                {/* <Link to='contact-list'><div className="contact_list">Contact list</div></Link> */}
                 <Link to='setting'><div className="setting">Setting</div></Link>
                 <div className="signout" onClick={() => {
                     setToken(false) 

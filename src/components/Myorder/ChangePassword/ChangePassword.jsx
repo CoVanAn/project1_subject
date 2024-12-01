@@ -1,26 +1,22 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import './ChangePassword.scss';
-import StoreContextProvider, {StoreContext} from "../../../context/StoreContext";
+import { StoreContext } from "../../../context/StoreContext";
 
 const ChangePassword = () => {
+    const { user, setUser } = useContext(StoreContext); // Get user data from context
 
-    const {fetchUser, user, setUser } = useContext(StoreContext);
-    // const [user, setUser] = useState({});
-
-
-    console.log(user);
+    // State for password information
+    const [passwords, setPasswords] = useState({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: ""
+    });
 
     const [showPasswords, setShowPasswords] = useState({
         current: false,
         new: false,
         confirm: false,
-    });
-
-    const [passwords, setPasswords] = useState({
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: ""
     });
 
     const [error, setError] = useState("");
@@ -34,69 +30,88 @@ const ChangePassword = () => {
     };
 
     const handleChange = (e) => {
-        const { id, value } = e.target;
+        const { name, value } = e.target;
         setPasswords((prev) => ({
             ...prev,
-            [id]: value
+            [name]: value
         }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Validate input fields
         if (!passwords.currentPassword || !passwords.newPassword || !passwords.confirmPassword) {
-            setError("Vui lòng nhập đầy đủ thông tin.");
+            setError("Please fill out all fields.");
             return;
         }
-        
-        if(user.password !== passwords.currentPassword){
-            setError("Mật khẩu cũ không đúng");
-            return;
-        }
+
+        // Validate current password
+        // if (user.password !== passwords.currentPassword) {
+        //     setError("Current password is incorrect.");
+        //     return;
+        // }
+
+        // Check new password and confirmation match
         if (passwords.newPassword !== passwords.confirmPassword) {
-            setError("Mật khẩu mới và xác nhận mật khẩu không khớp!");
+            setError("New password and confirmation do not match.");
             return;
         }
 
-        const formData = {
-            id: user.id,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            username: user.username,
-            password: passwords.newPassword,
-            phoneNumber: user.phoneNumber,
-            role: user.role,
+        // Update user information with the new password
+        const updatedUser = {
+            ...user,
+            password: passwords.newPassword // Only update the password
         };
-        
-
-        console.log("formdata: ",formData);
-     
 
         try {
-            const response = await axios.put("http://localhost:8080/api/users/5", formData);
-            // Nếu thành công, hiển thị thông báo thành công
-            setSuccessMessage("Mật khẩu đã được thay đổi thành công.");
-            setError("");  // Xóa lỗi nếu có
+            // Send PUT request to update password
+            const response = await axios.put(`http://localhost:8080/api/users/${user.id}`, updatedUser,
+                { headers: { "Authorization": `Bearer ${localStorage.getItem("customerToken")}` } }
+            );
+            // On success, display success message
+            setSuccessMessage("Password changed successfully.");
+            setShowPasswords({
+                current: false,
+                new: false,
+                confirm: false,
+            });
+            setError(""); // Clear any error
+
+            // Update user in context after successful password change
+            setUser(updatedUser);
         } catch (error) {
-            const serverError = error.response?.data?.message || "Lỗi xảy ra khi thay đổi mật khẩu.";
+            const serverError = error.response?.data?.message || "An error occurred while changing the password.";
             setError(serverError);
             console.error("Error details:", error.response?.data);
         }
-        
     };
 
+    let isLoggedIn = false;
+    if (localStorage.getItem('userId')) {
+        isLoggedIn = true;
+    }
+    if (!isLoggedIn) {
+        return (
+            <div className="change-password-page">
+                <h2>Change Password</h2>
+                <div className="error-message">Please log in to change your password.</div>
+            </div>
+        );
+    }
+
     return (
+
         <div className="change-password-page">
-            <h2>Thay đổi mật khẩu</h2>
+            <h2>Change Password</h2>
             <form id="change-password-form" onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <label htmlFor="currentPassword">Mật khẩu cũ</label>
+                    <label htmlFor="currentPassword">Current Password</label>
                     <div className="password-wrapper">
                         <input
                             type={showPasswords.current ? "text" : "password"}
-                            id="currentPassword"
-                            placeholder="Nhập mật khẩu cũ"
+                            name="currentPassword"
+                            placeholder="Enter current password"
                             value={passwords.currentPassword}
                             onChange={handleChange}
                         />
@@ -105,18 +120,18 @@ const ChangePassword = () => {
                             className="toggle-password"
                             onClick={() => togglePasswordVisibility("current")}
                         >
-                            {showPasswords.current ? "Ẩn" : "Hiện"}
+                            {showPasswords.current ? "Hide" : "Show"}
                         </button>
                     </div>
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="newPassword">Mật khẩu mới</label>
+                    <label htmlFor="newPassword">New Password</label>
                     <div className="password-wrapper">
                         <input
                             type={showPasswords.new ? "text" : "password"}
-                            id="newPassword"
-                            placeholder="Nhập mật khẩu mới"
+                            name="newPassword"
+                            placeholder="Enter new password"
                             value={passwords.newPassword}
                             onChange={handleChange}
                         />
@@ -125,18 +140,18 @@ const ChangePassword = () => {
                             className="toggle-password"
                             onClick={() => togglePasswordVisibility("new")}
                         >
-                            {showPasswords.new ? "Ẩn" : "Hiện"}
+                            {showPasswords.new ? "Hide" : "Show"}
                         </button>
                     </div>
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="confirmPassword">Xác nhận mật khẩu mới</label>
+                    <label htmlFor="confirmPassword">Confirm New Password</label>
                     <div className="password-wrapper">
                         <input
                             type={showPasswords.confirm ? "text" : "password"}
-                            id="confirmPassword"
-                            placeholder="Nhập lại mật khẩu mới"
+                            name="confirmPassword"
+                            placeholder="Confirm new password"
                             value={passwords.confirmPassword}
                             onChange={handleChange}
                         />
@@ -145,7 +160,7 @@ const ChangePassword = () => {
                             className="toggle-password"
                             onClick={() => togglePasswordVisibility("confirm")}
                         >
-                            {showPasswords.confirm ? "Ẩn" : "Hiện"}
+                            {showPasswords.confirm ? "Hide" : "Show"}
                         </button>
                     </div>
                 </div>
@@ -153,7 +168,7 @@ const ChangePassword = () => {
                 {error && <div className="error-message">{error}</div>}
                 {successMessage && <div className="success-message">{successMessage}</div>}
 
-                <button type="submit" className="change-password-btn">Thay đổi mật khẩu</button>
+                <button type="submit" className="change-password-btn">Change Password</button>
             </form>
         </div>
     );

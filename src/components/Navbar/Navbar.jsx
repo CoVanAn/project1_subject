@@ -11,7 +11,6 @@ const Navbar = ({ setShowLogin }) => {
     const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
 
-
     useEffect(() => {
         const handleScroll = () => {
             if (location.pathname === '/myorder') {
@@ -44,6 +43,11 @@ const Navbar = ({ setShowLogin }) => {
         };
     }, [location.pathname]);
 
+    let tontai = false;
+    if (localStorage.getItem('userId')) {
+        tontai = true;
+    }
+
     return (
         <nav>
             <div className={`navbar ${scrolled ? 'scrolled' : ''}`}>
@@ -69,10 +73,11 @@ const Navbar = ({ setShowLogin }) => {
                     <li className="flag"><img src={assets.englandflag} className="flag" alt="language"></img></li>
                     <li>Help</li>
                     <li>App-Download</li>
-                    {/* <li onClick={() => setShowLogin(true)}>Sign-In</li> */}
-                     {!localStorage.getItem('userId') ? <li onClick={() => setShowLogin(true)}>Sign-In</li>
+                     {!tontai ?
+                        <li onClick={() => setShowLogin(true)}>Sign-In</li>
                         :
-                       <h4>{user.username}</h4>}
+                        <h4>{user.username}</h4>
+                       }
                     {/* <li onClick={() => setShowLogin(true)}><h4>john_doe</h4></li> */}
 
                 </ul>

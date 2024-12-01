@@ -33,7 +33,10 @@
 }
 
 .profile-picture {
-    background: linear-gradient(to bottom right, #FF5722, #FFC107);  /* Thay đổi màu sắc gradient */
+    font-size: 30px;
+    font-weight: bold;
+    color: white;    
+    background: linear-gradient(to bottom right, #DF0000, #fc6060);  /* Thay đổi màu sắc gradient */
     width: 70px;  /* Điều chỉnh kích thước ảnh đại diện */
     height: 70px;
     border-radius: 50%;
@@ -61,8 +64,8 @@
 
 .edit-btn {
     background-color: white;
-    border: 1px solid #FF5722;  /* Thay đổi màu biên */
-    color: #FF5722;  /* Thay đổi màu chữ */
+    border: 1px solid #DF0000;  /* Thay đổi màu biên */
+    color: #DF0000;  /* Thay đổi màu chữ */
     padding: 8px 16px;
     border-radius: 5px;
     cursor: pointer;
@@ -85,6 +88,17 @@
     align-items: center;
     padding: 12px 0;
     border-bottom: 1px solid #f0f0f0;
+    span {
+        padding: 8px;
+    }
+    input {
+        width: 100%;
+        max-width: 500px;
+        padding: 8px;
+        border: 1px solid #c4c4c4;
+        border-radius: 5px;
+        // margin-top: 10px;
+    }
 }
 
 .profile-row:last-child {
@@ -103,14 +117,14 @@
 }
 
 .verify-link {
-    color: #FF5722;
+    color: #DF0000;
     font-size: 14px;
     margin-left: 10px;
     text-decoration: none;
 }
 
 .add-link {
-    color: #FF5722;
+    color: #DF0000;
     text-decoration: none;
 }
 
@@ -118,4 +132,21 @@
 .verify-link:hover {
     text-decoration: underline;
     font-weight: bold;  /* Thêm trọng lượng chữ khi hover */
+}
+
+.save-btn {
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+    button {
+        width: 50%;
+        height: 40px;
+        background-color:  #DF0000;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease, color 0.3s ease;  /* Thêm hiệu ứng khi hover */
+    }
 }
