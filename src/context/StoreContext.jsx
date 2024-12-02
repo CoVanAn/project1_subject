@@ -152,12 +152,18 @@ const StoreContextProvider = (props) => {
     const searchTermReturn = (place1, place2, departureDate ) => {
         setPlace1(place1);
         setPlace2(place2);
-        console.log("địa chỉ", place1, place2);
+        
+        // console.log("Ngày", (departureDate))
         let filter = [];
         const today = new Date();
-        if (departureDate === "") {
-            filter = flights.filter(flight => flight.departureAirport.city === place1 && flight.arrivalAirport.city === place2 && new Date(flight.departureTime) > today && new Date(flight.departureTime) > sessionStorage.getItem('departureDate'));
+        if (departureDate == "") {
+            console.log("Ngày hiện sau đó:", sessionStorage.getItem('departureDate'));
+            console.log("Ngày khởi hành:", sessionStorage.getItem('departureDateDontChose'));
+            // new Date(flight.departureTime) > sessionStorage.getItem('departureDate')
+            filter = flights.filter(flight => flight.departureAirport.city === place1 && flight.arrivalAirport.city === place2 && new Date(flight.departureTime) > today && new Date(flight.departureTime) > new Date(sessionStorage.getItem('departureDateDontChose') ));
         } else {
+            console.log("Ngày đi về:", (departureDate))
+            console.log("Ngày khởi hành:", sessionStorage.getItem('departureDate'));
             filter = flights.filter(flight => flight.departureAirport.city === place1 && flight.arrivalAirport.city === place2 && flight.departureTime.includes(departureDate));
         }
 
@@ -307,11 +313,11 @@ const StoreContextProvider = (props) => {
     }, []);
 
     useEffect(() => {
-        console.log("Đơn hàng hiện tại:", typeof (order), order);
+        // console.log("Đơn hàng hiện tại:", typeof (order), order);
     }, [order]);
 
     useEffect(() => {
-        console.log("Đơn hàng hiện tại:", typeof (myorder), myorder);
+        // console.log("Đơn hàng hiện tại:", typeof (myorder), myorder);
     }, [myorder]);
 
     useEffect(() => {

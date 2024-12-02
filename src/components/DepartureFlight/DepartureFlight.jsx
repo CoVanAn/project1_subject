@@ -8,7 +8,7 @@ const DepartureFlight = ({ flight }) => {
 
     const [isSelected, setIsSelected] = useState(false);
     const { booking, isConfirm, formatTime, calculateDuration,
-        formatDate, calculateDaysOvernight, formatPrice, isRoundTrip, isRoundTrip1, setIsRoundTrip1, place1, place2, setPlace1, setPlace2, setFlights, filterFlights, flights, searchTerm } = useContext(StoreContext);
+        formatDate, calculateDaysOvernight, formatPrice, isRoundTrip, isRoundTrip1, setIsRoundTrip1, place1, place2, setPlace1, setPlace2, setFlights, filterFlights, flights, searchTerm, searchTermReturn } = useContext(StoreContext);
     const chosenFlight = (flight) => {
         // console.log(flight);
         booking(flight);
@@ -24,7 +24,7 @@ const DepartureFlight = ({ flight }) => {
         var place11 = place1;
         var place22 = place2;
         setTimeout(() => {
-            searchTerm(place22, place11, sessionStorage.getItem('returnDate'));
+            searchTermReturn(place22, place11, sessionStorage.getItem('returnDate'));
             chosenFlight(flight);
         }, 500);
     }
@@ -101,7 +101,11 @@ const DepartureFlight = ({ flight }) => {
                         !isRoundTrip ? (
 
                             <Link to="/confirm">
-                                <button onClick={() => chosenFlight(flight)} className="book">
+                                <button onClick={() =>
+                                    chosenFlight(flight)
+
+
+                                } className="book">
                                     Book Now
                                 </button>
                             </Link>
@@ -114,7 +118,13 @@ const DepartureFlight = ({ flight }) => {
                             </Link>
                         )
                     ) : (
-                        <button onClick={handleAround} className="book">
+                        <button onClick={() => {
+                            sessionStorage.setItem('departureDate', flight.departureTime)
+                            console.log("departureDate", flight.departureTime)
+                            console.log("departureDate", sessionStorage.setItem('departureDateDontChose', flight.departureTime))
+                            handleAround();
+                        }
+                        } className="book">
                             Book The Departure
                         </button>
                     )}

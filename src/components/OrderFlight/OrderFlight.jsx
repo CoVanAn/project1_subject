@@ -51,7 +51,7 @@ const OrderFlight = () => {
         // setFilteredFlights(result); 
         sessionStorage.setItem('departureDate', departureDate);
         sessionStorage.setItem('returnDate', returnDate);
-        searchTermReturn(flight, destination, departureDate, returnDate);
+        searchTerm(flight, destination, departureDate, returnDate);
     };
 
 
