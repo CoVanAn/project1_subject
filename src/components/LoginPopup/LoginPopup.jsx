@@ -82,7 +82,7 @@ const LoginPopup = ({ setShowLogin }) => {
 
                 const data = await response.json();
 
-              
+
             } catch (error) {
                 setError("Server error. Please try again later.");
             }
@@ -110,24 +110,26 @@ const LoginPopup = ({ setShowLogin }) => {
                         </div>
                         <div className="form-group">
                             <label htmlFor="password" className="label">Password:</label>
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                id="password"
-                                className="input"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                            />
-                            <button
-                                type="button"
-                                className="toggle-password"
-                                onClick={() => setShowPassword(!showPassword)}
-                            >
-                                {showPassword ? "Hide" : "Show"}
-                            </button>
+                            <div className="password-wrapper">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    id="password"
+                                    className="input"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    className="toggle-password"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? "Hide" : "Show"}
+                                </button>
+                            </div>
                         </div>
                         <p className="signup_login">
-                            Create a new account? 
+                            Create a new account?
                             <span onClick={() => setCurrState("Sign up")}>Click here</span>
                         </p>
                         <button type="submit" className="login-button">Login</button>
@@ -204,7 +206,7 @@ const LoginPopup = ({ setShowLogin }) => {
                             />
                         </div>
                         <p className="signup_login">
-                            Already have an account? 
+                            Already have an account?
                             <span onClick={() => setCurrState("Login")}>Click here</span>
                         </p>
                         <button type="submit" className="login-button">Register</button>

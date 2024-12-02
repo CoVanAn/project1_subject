@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import axios from "axios";
 import './ChangePassword.scss';
 import { StoreContext } from "../../../context/StoreContext";
+import bcrypt from 'bcryptjs';
 
 const ChangePassword = () => {
     const { user, setUser } = useContext(StoreContext); // Get user data from context
@@ -37,55 +38,146 @@ const ChangePassword = () => {
         }));
     };
 
+
+    let changePassword = true;
+
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+
+    //     // Validate input fields
+    //     if (!passwords.currentPassword || !passwords.newPassword || !passwords.confirmPassword) {
+    //         setError("Please fill out all fields.");
+    //         return;
+    //     }
+
+    //     // Validate current password
+
+    //     // if (user.password !== passwords.currentPassword) {
+    //     //     setError("Current password is incorrect.");
+    //     //     return;
+    //     // }
+    //     bcrypt.compare(passwords.currentPassword, user.password, (err, result) => {
+    //         console.log('Kết quả:', result);
+    //         console.log('Mk cũ', user.password, 'Mk nhập:', passwords.currentPassword);
+    //         if (result === false) {
+    //           console.error('Error during password comparison:', err);
+    //           setError('An error occurred while checking the password.');
+    //           changePassword = false;
+    //           return;
+    //         }
+
+          
+    //         console.log('Kết quả:', 'Khớp');
+    //         // Tiếp tục xử lý khi mật khẩu khớp
+    //       });
+          
+          
+    //     // Check new password and confirmation match
+    //     if (passwords.newPassword !== passwords.confirmPassword) {
+    //         setError("New password and confirmation do not match.");
+    //         return;
+    //     }
+
+    //     // Update user information with the new password
+    //     const updatedUser = {
+    //         ...user,
+    //         password: passwords.newPassword // Only update the password
+    //     };
+
+    //     if(changePassword == true) {
+    //         try {
+    //             // Send PUT request to update password
+    //             const response = await axios.put(`http://localhost:8080/api/users/${user.id}`, updatedUser,
+    //                 { headers: { "Authorization": `Bearer ${localStorage.getItem("customerToken")}` } }
+    //             );
+    //             // On success, display success message
+    //             setSuccessMessage("Password changed successfully.");
+    //             setShowPasswords({
+    //                 current: false,
+    //                 new: false,
+    //                 confirm: false,
+    //             });
+    //             setError(""); // Clear any error
+    
+    //             // Update user in context after successful password change
+    //             setUser(updatedUser);
+    //         } catch (error) {
+    //             const serverError = error.response?.data?.message || "An error occurred while changing the password.";
+    //             setError(serverError);
+    //             console.error("Error details:", error.response?.data);
+    //         }
+    //     }
+
+    // };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         // Validate input fields
         if (!passwords.currentPassword || !passwords.newPassword || !passwords.confirmPassword) {
             setError("Please fill out all fields.");
             return;
         }
-
-        // Validate current password
-        // if (user.password !== passwords.currentPassword) {
-        //     setError("Current password is incorrect.");
-        //     return;
-        // }
-
+    
         // Check new password and confirmation match
         if (passwords.newPassword !== passwords.confirmPassword) {
             setError("New password and confirmation do not match.");
             return;
         }
-
-        // Update user information with the new password
-        const updatedUser = {
-            ...user,
-            password: passwords.newPassword // Only update the password
-        };
-
-        try {
-            // Send PUT request to update password
-            const response = await axios.put(`http://localhost:8080/api/users/${user.id}`, updatedUser,
-                { headers: { "Authorization": `Bearer ${localStorage.getItem("customerToken")}` } }
-            );
-            // On success, display success message
-            setSuccessMessage("Password changed successfully.");
-            setShowPasswords({
-                current: false,
-                new: false,
-                confirm: false,
-            });
-            setError(""); // Clear any error
-
-            // Update user in context after successful password change
-            setUser(updatedUser);
-        } catch (error) {
-            const serverError = error.response?.data?.message || "An error occurred while changing the password.";
-            setError(serverError);
-            console.error("Error details:", error.response?.data);
-        }
+    
+        // Validate current password using bcrypt
+        bcrypt.compare(passwords.currentPassword, user.password, async (err, result) => {
+            if (err) {
+                console.error('Error during password comparison:', err);
+                setError('An error occurred while checking the password.');
+                return;
+            }
+    
+            if (!result) {
+                setError("Current password is incorrect.");
+                return;
+            }
+    
+            console.log('Password matched. Proceeding to update.');
+    
+            // If password matches, update user information
+            const updatedUser = {
+                ...user,
+                password: passwords.newPassword, // Update only the password
+            };
+    
+            try {
+                // Send PUT request to update password
+                const response = await axios.put(
+                    `http://localhost:8080/api/users/${user.id}`,
+                    updatedUser,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+                        },
+                    }
+                );
+    
+                setSuccessMessage("Password changed successfully.");
+                setError(""); // Clear any error
+    
+                // Update user in context
+                setUser(updatedUser);
+    
+                // Clear password fields
+                setPasswords({
+                    currentPassword: "",
+                    newPassword: "",
+                    confirmPassword: "",
+                });
+            } catch (error) {
+                const serverError = error.response?.data?.message || "An error occurred while changing the password.";
+                setError(serverError);
+                console.error("Error details:", error.response?.data);
+            }
+        });
     };
+    
 
     let isLoggedIn = false;
     if (localStorage.getItem('userId')) {

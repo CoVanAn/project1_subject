@@ -5,14 +5,18 @@
   "type": "module",
   "proxy": "http://localhost:8080/",
   "scripts": {
-    "dev": "vite && node clearLocalStorage.js",
+    "dev": "node clearLocalStorage.js && vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "aws-sdk": "^2.1692.0",
     "axios": "^1.7.7",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "mock-aws-s3": "^4.0.2",
+    "nock": "^13.5.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.1",
