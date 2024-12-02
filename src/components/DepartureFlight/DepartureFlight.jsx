@@ -19,27 +19,14 @@ const DepartureFlight = ({ flight }) => {
         setIsSelected(!isSelected); // Toggle between true and false
     };
 
-    // var roundTrip = true;
-    // const [roundTrip, setRoundTrip] = useState(true);
-
-
     const handleAround = () => {
         setIsRoundTrip1(false);
         var place11 = place1;
         var place22 = place2;
         setTimeout(() => {
-            searchTerm(place22, place11, "");
+            searchTerm(place22, place11, sessionStorage.getItem('returnDate'));
             chosenFlight(flight);
         }, 500);
-        // const newRoundTrip = false;
-        // setRoundTrip(false);
-        // console.log("roundtrip: ", roundTrip);
-        // roundTrip = false;
-
-        // setPlace1(place2);
-        // setPlace2(place11);
-        // console.log("Chiều về")
-
     }
 
     return (

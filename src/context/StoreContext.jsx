@@ -73,11 +73,6 @@ const StoreContextProvider = (props) => {
         }
     };
 
-    // const fetchFlightsList = async () => {
-    //     const response = await axios.get(`${url}/api/flights`);
-    //     setFlights(response.data);
-    // }
-
     const fetchUser = async () => {
         // if(token){
             try {
@@ -137,20 +132,40 @@ const StoreContextProvider = (props) => {
         return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
-    const searchTerm = (place1, place2, departure) => {
+    const searchTerm = (place1, place2, departureDate, returnDate ) => {
         setPlace1(place1);
         setPlace2(place2);
         console.log("địa chỉ", place1, place2);
         let filter = [];
-        if (departure === "") {
-            filter = flights.filter(flight => flight.departureAirport.city === place1 && flight.arrivalAirport.city === place2);
+        const today = new Date();
+        if (departureDate === "") {
+            filter = flights.filter(flight => flight.departureAirport.city === place1 && flight.arrivalAirport.city === place2 && new Date(flight.departureTime) > today);
         } else {
-            filter = flights.filter(flight => flight.departureAirport.city === place1 && flight.arrivalAirport.city === place2 && flight.departureTime.includes(departure));
+            filter = flights.filter(flight => flight.departureAirport.city === place1 && flight.arrivalAirport.city === place2 && flight.departureTime.includes(departureDate));
         }
+
         setNewFlights(filter)
         setSearchedFlights(filter)
         console.log("Chuyến bay mới:", newFlights)
     }
+
+    const searchTermReturn = (place1, place2, departureDate ) => {
+        setPlace1(place1);
+        setPlace2(place2);
+        console.log("địa chỉ", place1, place2);
+        let filter = [];
+        const today = new Date();
+        if (departureDate === "") {
+            filter = flights.filter(flight => flight.departureAirport.city === place1 && flight.arrivalAirport.city === place2 && new Date(flight.departureTime) > today && new Date(flight.departureTime) > sessionStorage.getItem('departureDate'));
+        } else {
+            filter = flights.filter(flight => flight.departureAirport.city === place1 && flight.arrivalAirport.city === place2 && flight.departureTime.includes(departureDate));
+        }
+
+        setNewFlights(filter)
+        setSearchedFlights(filter)
+        console.log("Chuyến bay mới:", newFlights)
+    }
+
 
     const filterStop = (stop) => {
         if (stop === 0) {
@@ -347,6 +362,7 @@ const StoreContextProvider = (props) => {
         fetchMyorder,
         formatPrice,
         searchTerm,
+        searchTermReturn,
         filterStop,
         booking,
         isConfirm,

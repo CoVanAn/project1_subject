@@ -320,6 +320,7 @@ const Booking = () => {
                         {/* {formatPrice(passengers.reduce((total, passenger) => total + calculateTotalPrice(confirm[0].basePrice, passenger.seatClass, passenger.luggage), 0))} VND */}
                     </h3>
                     <button className={`booking ${block ? 'block' : ''}`} onClick={() => {
+                        console.log("isRoundTrip: ", isRoundTrip );
                         const ticketCounts = getTicketTypeCounts();
                         const bookingTicketTypes = [];
 
@@ -375,7 +376,7 @@ const Booking = () => {
                             confirm.map((flight) => (
                                     postBooking({
         
-                                        userId: 1,  // Giả định userId là 1
+                                        userId: localStorage.getItem("userId"),  // Giả định userId là 1
                                         flightId: flight.flightId,
                                         bookingTicketTypes,
                                         passengers: passengers.map(p => ({

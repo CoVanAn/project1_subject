@@ -15,8 +15,9 @@ const OrderFlight = () => {
     const [flight, setFlight] = useState('');
     const [destination, setDestination] = useState('');
     const [departureDate, setDepartureDate] = useState('');
+    const [returnDate, setReturnDate] = useState('');
 
-    const { place, searchTerm, place1, place2, isRoundTrip, setIsRoundTrip, setIsRoundTrip1 } = useContext(StoreContext);
+    const { place, searchTerm, place1, place2, isRoundTrip, setIsRoundTrip, setIsRoundTrip1 , searchTermReturn} = useContext(StoreContext);
 
     const handleFlightChange = (e) => {
         setFlight(e);
@@ -48,7 +49,9 @@ const OrderFlight = () => {
         // Lọc chuyến bay dựa trên địa chỉ đã chọn
         // const result = flights.filter((f) => f.origin === flight && f.destination === destination);
         // setFilteredFlights(result); 
-        searchTerm(flight, destination, departureDate)
+        sessionStorage.setItem('departureDate', departureDate);
+        sessionStorage.setItem('returnDate', returnDate);
+        searchTermReturn(flight, destination, departureDate, returnDate);
     };
 
 
@@ -146,7 +149,14 @@ const OrderFlight = () => {
                     {isRoundTrip && (
                         <div className="return">
                             <p>Return</p>
-                            <input name='Return' type="date" placeholder="Mon, 2 Oc" required />
+                            <input
+                            name='Return'
+                            type="date"
+                            placeholder="Mon, 2 Sep"
+                            required
+                            value={returnDate}
+                            onChange={(e) => setReturnDate(e.target.value)} // Update the state
+                        />
                         </div>
                     )}
                     <div>
